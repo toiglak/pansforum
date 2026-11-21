@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ heading }} | PANS Forum{% endblock %}
+{% block page_heading %}<h1 class="page-topbar__title">Kategorie</h1>{% endblock %}
+{% block content %}
+<div class="form-page">
+  <h2 class="form-title">{{ heading }}</h2>
+  <form method="post" class="form" novalidate>
+    {% csrf_token %}
+    {% for error in form.non_field_errors %}<div class="message message--error" role="alert">{{ error }}</div>{% endfor %}
+    {% for field in form %}
+      <div class="form-field">
+        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.name == "slug" %}<p class="form-hint">Pozostaw puste, aby utworzyć adres z nazwy.</p>{% endif %}
+        {% for error in field.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+    <div class="form-links">
+      <button class="button button--primary" type="submit"><span class="button__label">{{ submit_label }}</span></button>
+      <a class="button button--secondary" href="{% url 'categories:list' %}"><span class="button__label">Anuluj</span></a>
+    </div>
+  </form>
+</div>
+{% endblock %}

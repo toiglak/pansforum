@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Kategorie | PANS Forum{% endblock %}
+{% block page_heading %}<h1 class="page-topbar__title">Kategorie</h1>{% endblock %}
+{% block content %}
+  {# Pasek akcji jest w treści, a nie w topbar_tools, bo tam przycisk nachodzi na tytuł na wąskich ekranach. #}
+  {% if is_admin %}
+    <div class="composer">
+      <span class="composer__prompt">Zarządzaj kategoriami</span>
+      <a class="button button--primary button--small composer__button" href="{% url 'categories:create' %}"><span class="button__label">Dodaj kategorię</span></a>
+    </div>
+  {% endif %}
+  <div class="post-list">
+    {% for category in categories %}
+      <article class="post-card">
+        <div class="post-card__main">
+          <h2 class="post-title"><a href="/?category={{ category.slug|urlencode }}">{{ category.name }}</a></h2>
+          {% if category.description %}<p class="post-body">{{ category.description }}</p>{% endif %}
+          {% if is_admin %}
+            {# .form-links zamiast .post-actions: ten drugi ma ujemny lewy margines pod ikony posta. #}
+            <div class="form-links">
+              <a class="button button--secondary button--small" href="{% url 'categories:edit' category.id %}"><span class="button__label">Edytuj</span></a>
+              <a class="button button--danger button--small" href="{% url 'categories:delete' category.id %}"><span class="button__label">Usuń</span></a>
+            </div>
+          {% endif %}
+        </div>
+      </article>
+    {% empty %}
+      <div class="empty-state"><p class="empty-state__title">Brak kategorii</p></div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Usuń kategorię | PANS Forum{% endblock %}
+{% block page_heading %}<h1 class="page-topbar__title">Kategorie</h1>{% endblock %}
+{% block content %}
+<div class="form-page">
+  <h2 class="form-title">Usunąć kategorię „{{ category.name }}”?</h2>
+  <form method="post" class="form">
+    {% csrf_token %}
+    <div class="form-links">
+      <button class="button button--danger" type="submit"><span class="button__label">Usuń kategorię</span></button>
+      <a class="button button--secondary" href="{% url 'categories:list' %}"><span class="button__label">Anuluj</span></a>
+    </div>
+  </form>
+</div>
+{% endblock %}
