@@ -1,1 +1,33 @@
 {# M5 integration point. Required context: target_type, target_id, score, user_vote. #}
+<form
+  class="action-pair"
+  method="post"
+  action="{% url 'votes:cast' target_type target_id %}"
+  role="group"
+  aria-label="{% if target_type == 'comment' %}Ocena komentarza{% else %}Ocena posta{% endif %}"
+>
+  {% csrf_token %}
+  {% if next_url %}<input type="hidden" name="next" value="{{ next_url }}">{% endif %}
+  <button
+    class="icon-button{% if user_vote == 1 %} icon-button--active{% endif %}"
+    {% if user_vote == 1 %}style="color: #1b7f46;"{% endif %}
+    type="submit"
+    name="value"
+    value="1"
+    aria-label="{% if target_type == 'comment' %}Głos za komentarzem{% else %}Głos za{% endif %}"
+    aria-pressed="{% if user_vote == 1 %}true{% else %}false{% endif %}"
+  >
+    <svg viewBox="0 0 24 24" fill="{% if user_vote == 1 %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 12h4.7v8h6.6v-8H20L12 3Z"/></svg>
+  </button>
+  <span class="action-stat action-stat--strong">{{ score|default:0 }}</span>
+  <button
+    class="icon-button{% if user_vote == -1 %} icon-button--active{% endif %}"
+    type="submit"
+    name="value"
+    value="-1"
+    aria-label="{% if target_type == 'comment' %}Głos przeciw komentarzowi{% else %}Głos przeciw{% endif %}"
+    aria-pressed="{% if user_vote == -1 %}true{% else %}false{% endif %}"
+  >
+    <svg viewBox="0 0 24 24" fill="{% if user_vote == -1 %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-linejoin="round" aria-hidden="true"><path d="m12 21 8-9h-4.7V4H8.7v8H4l8 9Z"/></svg>
+  </button>
+</form>

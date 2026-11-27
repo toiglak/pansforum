@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Głosowanie (M5) — PANS Forum{% endblock %}
+{% block page_heading %}<h1 class="page-topbar__title">Podgląd głosowania (M5)</h1>{% endblock %}
+{% block content %}
+  {% if post %}
+    <article class="post-card">
+      <div class="post-card__main">
+        <header class="post-meta">
+          <strong class="post-meta__author">{{ post.author.username }}</strong>
+          <span class="post-meta__muted">{{ post.created_at|date:"d.m.Y H:i" }}</span>
+          <span class="post-meta__category">{{ post.category.name }}</span>
+        </header>
+        <h2 class="post-title">{{ post.title }}</h2>
+        <p class="post-body">{{ post.body }}</p>
+        <footer class="post-actions">
+          <div class="post-actions__group">
+            {% include "votes/_controls.html" with target_type="post" target_id=post.id score=post_vote.score user_vote=post_vote.user_vote next_url=next_url %}
+          </div>
+        </footer>
+      </div>
+    </article>
+
+    {% if comments_with_votes %}
+      <h2 class="section-title">Komentarze</h2>
+      <div class="thread-replies">
+        {% for item in comments_with_votes %}
+          <article class="comment-item">
+            <span class="avatar avatar--small" aria-hidden="true">{{ item.comment.author.username|slice:":1"|upper }}</span>
+            <div class="comment-item__content">
+              <header class="post-meta">
+                <strong class="post-meta__author">{{ item.comment.author.username }}</strong>
+                <span class="post-meta__muted">{{ item.comment.created_at|date:"d.m.Y H:i" }}</span>
+              </header>
+              <p class="comment-item__body">{{ item.comment.body }}</p>
+              <footer class="post-actions">
+                {% include "votes/_controls.html" with target_type="comment" target_id=item.comment.id score=item.vote.score user_vote=item.vote.user_vote next_url=next_url %}
+              </footer>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="empty-state">
+      <p class="empty-state__title">Brak treści do podglądu</p>
+      <p class="empty-state__text">Dodaj przykładowy post w bazie, aby przetestować kontrolki głosowania.</p>
+    </div>
+  {% endif %}
+{% endblock %}
